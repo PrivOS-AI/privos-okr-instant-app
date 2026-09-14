@@ -1,0 +1,385 @@
+/* Standalone-safe fallback palette; overridden live by the Hub's --base-* theme tokens
+   (see PrivosAppProvider, which writes them onto <html> from HOST_CONTEXT_CHANGED). */
+:root,
+[data-theme='light'] {
+  --okr-bg: var(--base-bg-main, #f7f8fa);
+  --okr-bg-card: var(--base-bg-card, #ffffff);
+  --okr-text: var(--base-text-primary, #1f2329);
+  --okr-text-muted: var(--base-text-secondary, #4b5563);
+  --okr-border: var(--base-border, #e4e7ea);
+  --okr-accent: var(--base-primary, #156ff5);
+  --okr-radius: var(--base-radius-md, 8px);
+  --okr-success-bg: #e6f6ec;
+  --okr-success-text: #146c2e;
+  --okr-warning-bg: #fff4e0;
+  --okr-warning-text: #8a5a00;
+  --okr-danger-bg: #fdeaea;
+  --okr-danger-text: #a1272b;
+  --okr-info-bg: #e8f0fe;
+  --okr-info-text: #1a4ba0;
+  --okr-neutral-bg: #eef0f2;
+  --okr-neutral-text: #444b52;
+}
+
+[data-theme='dark'] {
+  --okr-bg: var(--base-bg-main, #14181b);
+  --okr-bg-card: var(--base-bg-card, #1f2429);
+  --okr-text: var(--base-text-primary, #e4e7ea);
+  --okr-text-muted: var(--base-text-secondary, #a7adb4);
+  --okr-border: var(--base-border, #33393f);
+  --okr-accent: var(--base-primary, #4c8dff);
+  --okr-radius: var(--base-radius-md, 8px);
+  --okr-success-bg: #123a22;
+  --okr-success-text: #7fe3a2;
+  --okr-warning-bg: #3a2c05;
+  --okr-warning-text: #f0c05a;
+  --okr-danger-bg: #3a1414;
+  --okr-danger-text: #f29a9d;
+  --okr-info-bg: #12233f;
+  --okr-info-text: #8fb8f7;
+  --okr-neutral-bg: #262c31;
+  --okr-neutral-text: #c3c9cf;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--okr-bg);
+  color: var(--okr-text);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--okr-accent);
+  outline-offset: 2px;
+}
+
+.okr-app {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.okr-fatal-error {
+  padding: 24px;
+  text-align: center;
+}
+
+.okr-empty {
+  color: var(--okr-text-muted);
+}
+
+.okr-error {
+  color: var(--okr-danger-text);
+  background: var(--okr-danger-bg);
+  border-radius: var(--okr-radius);
+  padding: 8px 12px;
+}
+
+.okr-readonly-note {
+  background: var(--okr-info-bg);
+  color: var(--okr-info-text);
+  border-radius: var(--okr-radius);
+  padding: 8px 12px;
+  margin-bottom: 12px;
+}
+
+.okr-board-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.okr-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.okr-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+}
+
+.okr-field label,
+fieldset.okr-field legend {
+  font-size: 0.85rem;
+  color: var(--okr-text-muted);
+}
+
+.okr-field input,
+.okr-field select,
+.okr-field textarea {
+  padding: 8px 10px;
+  border: 1px solid var(--okr-border);
+  border-radius: var(--okr-radius);
+  background: var(--okr-bg-card);
+  color: var(--okr-text);
+}
+
+.okr-field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.okr-hint {
+  font-size: 0.75rem;
+  color: var(--okr-text-muted);
+}
+
+.okr-radio,
+.okr-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.95rem;
+}
+
+.okr-form {
+  border: 1px solid var(--okr-border);
+  border-radius: var(--okr-radius);
+  padding: 16px;
+  margin: 12px 0;
+  background: var(--okr-bg-card);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.okr-form-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.okr-form-actions button[type='submit'],
+.okr-board-toolbar > button,
+.okr-kr-actions > button:not(.okr-secondary) {
+  background: var(--okr-accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--okr-radius);
+  padding: 8px 14px;
+}
+
+.okr-secondary,
+.okr-back {
+  background: transparent;
+  border: 1px solid var(--okr-border);
+  color: var(--okr-text);
+  border-radius: var(--okr-radius);
+  padding: 8px 14px;
+}
+
+.okr-back {
+  margin-bottom: 12px;
+}
+
+.okr-objective-grid {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.okr-objective-card {
+  border: 1px solid var(--okr-border);
+  border-radius: var(--okr-radius);
+  background: var(--okr-bg-card);
+}
+
+.okr-objective-card-at-risk {
+  border-color: var(--okr-danger-text);
+  border-width: 2px;
+}
+
+.okr-objective-card-button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 14px;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.okr-objective-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.okr-objective-card-head h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.okr-objective-owner {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--okr-text-muted);
+}
+
+.okr-at-risk-note {
+  margin: 0;
+  color: var(--okr-danger-text);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.okr-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.okr-badge-success {
+  background: var(--okr-success-bg);
+  color: var(--okr-success-text);
+}
+.okr-badge-warning {
+  background: var(--okr-warning-bg);
+  color: var(--okr-warning-text);
+}
+.okr-badge-danger {
+  background: var(--okr-danger-bg);
+  color: var(--okr-danger-text);
+}
+.okr-badge-info {
+  background: var(--okr-info-bg);
+  color: var(--okr-info-text);
+}
+.okr-badge-neutral {
+  background: var(--okr-neutral-bg);
+  color: var(--okr-neutral-text);
+}
+
+.okr-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.okr-progress-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--okr-neutral-bg);
+  overflow: hidden;
+}
+
+.okr-progress-fill {
+  height: 100%;
+  background: var(--okr-accent);
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
+
+.okr-progress-label {
+  font-size: 0.8rem;
+  color: var(--okr-text-muted);
+  min-width: 2.5em;
+  text-align: right;
+}
+
+.okr-detail-header h2 {
+  margin-bottom: 4px;
+}
+
+.okr-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  color: var(--okr-text-muted);
+  font-size: 0.9rem;
+}
+
+.okr-kr-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.okr-kr-item {
+  border: 1px solid var(--okr-border);
+  border-radius: var(--okr-radius);
+  padding: 12px;
+  background: var(--okr-bg-card);
+}
+
+.okr-kr-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.okr-kr-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.okr-kr-values {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--okr-text-muted);
+}
+
+.okr-kr-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.okr-history {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.okr-history li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.okr-history-note {
+  color: var(--okr-text-muted);
+}
+
+@media (max-width: 480px) {
+  .okr-app {
+    padding: 12px;
+  }
+  .okr-field-row {
+    flex-direction: column;
+  }
+}

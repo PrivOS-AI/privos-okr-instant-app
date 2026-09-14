@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 3,
+  "kind": "mcp-app",
+  "name": "ai.privos.okr-instant-app",
+  "version": "1.0.0",
+  "title": "OKR Goals Book",
+  "description": "Track quarterly Objectives and Key Results per room: measurable key results, checkbox milestones, check-ins with confidence, and a progress board filterable by owner and status.",
+  "icon": "/public/icon.svg",
+  "author": {
+    "name": "PrivOS AI",
+    "email": "dev@privos.ai",
+    "website": "https://privos.ai"
+  },
+  "homepage": "https://github.com/PrivOS-AI/privos-okr-instant-app",
+  "repository": "https://github.com/PrivOS-AI/privos-okr-instant-app",
+  "executionMode": "INSTANT",
+  "permissions": [
+    {
+      "scope": "basic:information",
+      "requirement": "required",
+      "context": "room",
+      "executionContext": "user",
+      "feature": "core.context",
+      "reason": "Identify the active room so the goals book loads and saves the right room's OKR lists."
+    },
+    {
+      "scope": "lists:read",
+      "requirement": "required",
+      "context": "room",
+      "executionContext": "user",
+      "feature": "okr.records.read",
+      "reason": "Read this room's Objectives, Key Results, and Check-ins lists to render the progress board."
+    },
+    {
+      "scope": "lists:write",
+      "requirement": "optional",
+      "context": "room",
+      "executionContext": "user",
+      "feature": "okr.records.manage",
+      "reason": "Create the three OKR lists on first use, and create/update objectives, key results, and check-ins from the board.",
+      "recommended": true,
+      "degradedBehavior": "The board is read-only: existing objectives and key results are still visible, but nothing can be created, checked in, or updated."
+    }
+  ],
+  "ui": {
+    "entryPoints": {
+      "roomTab": {
+        "title": "OKR Goals Book",
+        "resourceUri": "ui://ai.privos.okr-instant-app/dashboard.html"
+      },
+      "standalone": {
+        "title": "OKR Goals Book",
+        "resourceUri": "ui://ai.privos.okr-instant-app/dashboard.html"
+      }
+    }
+  },
+  "agent": {
+    "purpose": "Help the user understand and update the room's OKRs: summarize objective progress, point out at-risk key results, and explain how to record a check-in.",
+    "personality": "Encouraging and concise, like a supportive goal-tracking coach.",
+    "knowledge": [
+      "An objective's progress is the average of its key results' progress.",
+      "A key result is either a measurable metric (start/target/current value) or a checkbox milestone.",
+      "Every check-in records a note, an updated current value, and a confidence level: on track, at risk, or off track.",
+      "An objective is highlighted at risk when any of its key results is at risk or off track."
+    ],
+    "hubTools": []
+  },
+  "license": {
+    "tiers": [
+      {
+        "id": "default",
+        "name": "Free",
+        "features": []
+      }
+    ]
+  }
+}

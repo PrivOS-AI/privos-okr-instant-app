@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>OKR Goals Book — screenshot harness</title>
+    <style>
+      html, body { margin: 0; padding: 0; background: #f2f4f7; }
+      iframe { display: block; width: 1200px; height: 900px; border: 0; }
+    </style>
+  </head>
+  <body>
+    <!--
+      Plays the PrivOS Hub's side of the postMessage bridge for one iframe:
+      answers `mcpapp.context.get` and the `privos.lists.*` tool calls the
+      real app-react bridge (running for real inside the iframe) makes, and
+      pushes the initial `HOST_CONTEXT_CHANGED` the Hub sends right after
+      `ui/initialize`. This is the "mocked bridge" the app is rendered
+      against — everything else (App.tsx, the hooks, the bridge transport
+      itself) is the app's real, unmodified code.
+    -->
+    <iframe id="app" src="./iframe.html" title="OKR Goals Book"></iframe>
+    <script src="./mock-bridge.js"></script>
+  </body>
+</html>
