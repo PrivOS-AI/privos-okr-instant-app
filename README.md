@@ -108,6 +108,13 @@ No `users:read`, no `files:*`, no sandbox/db scopes — the app never needs them
 - Themed via the Hub's `--base-*` CSS custom properties (light/dark), with standalone-safe
   fallback values — see `src/ui/okr/okr.css`.
 
+## Adding INSTANT to your own manifest
+
+See [`docs/adding-instant-to-manifest.md`](docs/adding-instant-to-manifest.md)
+for a field-by-field walkthrough of this app's own `privos-app.json`, how to
+convert a scaffolded or existing runtime app into INSTANT, and the validation
+commands and common lint errors along the way.
+
 ## Publishing to the PrivOS marketplace
 
 The app depends only on published packages (`@privos_ai/app-server` `^0.12.0`,
