@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "OKR / goals book \u2014 a PrivOS INSTANT MCP app (frontend-only, no runtime) backed by PrivOS Lists.",
+  "description": "OKR / goals book — a PrivOS INSTANT MCP app (frontend-only, no runtime) backed by PrivOS Lists.",
   "title": "OKR Goals Book",
   "icon": "/public/icon.svg",
   "license": "MIT",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@privos_ai/app-react": "^0.6.0",
-    "@privos_ai/app-server": "^0.12.0",
+    "@privos_ai/app-server": "^0.12.1",
     "@testing-library/react": "^16.0.0",
     "@types/node": "^22.0.0",
     "@types/react": "^18.0.0",
