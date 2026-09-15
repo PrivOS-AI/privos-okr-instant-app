@@ -2,7 +2,7 @@
   "schemaVersion": 3,
   "kind": "mcp-app",
   "name": "ai.privos.okr-instant-app",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "title": "OKR Goals Book",
   "description": "Track quarterly Objectives and Key Results per room: measurable key results, checkbox milestones, check-ins with confidence, and a progress board filterable by owner and status.",
   "icon": "/public/icon.svg",
@@ -30,6 +30,14 @@
       "executionContext": "user",
       "feature": "okr.records.read",
       "reason": "Read this room's Objectives, Key Results, and Check-ins lists to render the progress board."
+    },
+    {
+      "scope": "lists:query",
+      "requirement": "required",
+      "context": "room",
+      "executionContext": "user",
+      "feature": "okr.records.read",
+      "reason": "Page through every item of the three OKR lists, so large boards and long check-in histories load completely."
     },
     {
       "scope": "lists:write",

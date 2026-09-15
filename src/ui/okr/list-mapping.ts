@@ -5,13 +5,13 @@
  */
 import type { CheckIn, Confidence, KeyResult, KeyResultKind, Objective, ObjectiveStatus } from './types';
 
-/** A single custom field entry as returned by `privos.lists.getItems`. */
+/** A single custom field entry as returned by `privos.lists.queryItems`. */
 export interface RawCustomField {
   fieldId: string;
   value: unknown;
 }
 
-/** A single list item as returned by `privos.lists.getItems` / `getAll`. */
+/** A single list item as returned by `privos.lists.queryItems`. */
 export interface RawListItem {
   _id: string;
   name?: string;
@@ -85,6 +85,24 @@ export function toCheckIn(item: RawListItem): CheckIn {
     author: stringField(fields, 'author'),
     createdAt: item.createdAt ?? '',
   };
+}
+
+/**
+ * A key result's current value and confidence come from its latest check-in.
+ * Check-ins are the history of record, so recording one is a single list write
+ * and there is no second write to the key result that could fail halfway.
+ * Key results with no check-in keep the values they were created with.
+ */
+export function applyLatestCheckIns(keyResults: readonly KeyResult[], checkIns: readonly CheckIn[]): KeyResult[] {
+  const latest = new Map<string, CheckIn>();
+  for (const checkIn of checkIns) {
+    const previous = latest.get(checkIn.keyResultId);
+    if (!previous || checkIn.createdAt >= previous.createdAt) latest.set(checkIn.keyResultId, checkIn);
+  }
+  return keyResults.map((keyResult) => {
+    const checkIn = latest.get(keyResult._id);
+    return checkIn ? { ...keyResult, currentValue: checkIn.value, confidence: checkIn.confidence } : keyResult;
+  });
 }
 
 /** `customFields` array for `privos.lists.createItem` / `updateItem`. */

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { parseToolResult, usePrivosApp } from '@privos_ai/app-react';
 import type { McpApp } from '@privos_ai/app-react';
 
-import { toCheckIn, toKeyResult, toObjective, objectiveCustomFields, keyResultCustomFields, checkInCustomFields } from './list-mapping';
+import { applyLatestCheckIns, toCheckIn, toKeyResult, toObjective, objectiveCustomFields, keyResultCustomFields, checkInCustomFields } from './list-mapping';
 import type { RawListItem } from './list-mapping';
 import { OKR_LIST_DEFINITIONS } from './schema';
 import type { ListDefinition } from './schema';
@@ -54,16 +54,27 @@ interface ListIds {
   checkins: string;
 }
 
-const ITEMS_PAGE_SIZE = 100;
+const ITEMS_PAGE_SIZE = 200;
 
+/**
+ * Reads a whole list by following `queryItems`' keyset cursor. A page can come
+ * back shorter than requested while more items remain (visibility filtering),
+ * so only a null cursor ends the walk.
+ */
 async function fetchAllItems(app: McpApp, listId: string): Promise<RawListItem[]> {
-  const response = await callTool<{ items: RawListItem[] }>(app, 'privos.lists.getItems', {
-    listId,
-    count: ITEMS_PAGE_SIZE,
-    sortBy: 'createdAt',
-    sortOrder: 'asc',
-  });
-  return response.items ?? [];
+  const items: RawListItem[] = [];
+  let cursor: string | null = null;
+  do {
+    const page: { items?: RawListItem[]; nextCursor?: string | null } = await callTool(app, 'privos.lists.queryItems', {
+      listId,
+      count: ITEMS_PAGE_SIZE,
+      sort: { field: 'createdAt', direction: 1 },
+      ...(cursor ? { cursor } : {}),
+    });
+    items.push(...(page.items ?? []));
+    cursor = page.nextCursor ?? null;
+  } while (cursor);
+  return items;
 }
 
 export interface OkrData {
@@ -137,8 +148,9 @@ export function useOkrData(roomId: string): OkrData {
         ]);
         if (cancelled) return;
         setObjectives(objectiveItems.map(toObjective));
-        setKeyResults(keyResultItems.map(toKeyResult));
-        setCheckIns(checkInItems.map(toCheckIn));
+        const loadedCheckIns = checkInItems.map(toCheckIn);
+        setKeyResults(applyLatestCheckIns(keyResultItems.map(toKeyResult), loadedCheckIns));
+        setCheckIns(loadedCheckIns);
       } catch (err) {
         if (!cancelled) setError(err instanceof Error ? err : new Error(String(err)));
       } finally {
@@ -223,13 +235,8 @@ export function useOkrData(roomId: string): OkrData {
           description: input.note,
           customFields: checkInCustomFields(input),
         });
-        await callTool(app, 'privos.lists.updateItem', {
-          itemId: input.keyResultId,
-          customFields: [
-            { fieldId: 'currentValue', value: input.value },
-            { fieldId: 'confidence', value: input.confidence },
-          ],
-        });
+        // The board derives the key result's value from this check-in on reload
+        // (`applyLatestCheckIns`), so there is no second write to fail halfway.
       }),
     [app, guardedWrite, requireListIds],
   );

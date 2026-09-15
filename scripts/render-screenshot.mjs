@@ -73,9 +73,15 @@ async function main() {
     const page = await browser.newPage({ viewport: { width: 1200, height: 900 } });
     await page.goto(`http://127.0.0.1:${port}/parent.html`);
     // The board renders once `useOkrData` resolves both `getAll` and the
-    // three `getItems` round trips through the mocked bridge.
-    await page.frameLocator('#app').getByRole('heading', { name: '2026-Q3' }).waitFor({ timeout: 10_000 });
-    await page.frameLocator('#app').getByText('Needs attention').first().waitFor({ timeout: 10_000 });
+    // three `queryItems` round trips through the mocked bridge.
+    const app = page.frameLocator('#app');
+    await app.getByRole('heading', { name: '2026-Q3' }).waitFor({ timeout: 10_000 });
+    await app.getByText('Needs attention').first().waitFor({ timeout: 10_000 });
+    // `detail` opens the first objective instead of capturing the overview board.
+    if (process.argv[3] === 'detail') {
+      await app.locator('.okr-objective-card-button').first().click();
+      await app.getByRole('heading', { name: 'Key results' }).waitFor({ timeout: 10_000 });
+    }
 
     mkdirSync(path.dirname(outputPath), { recursive: true });
     await page.screenshot({ path: outputPath });

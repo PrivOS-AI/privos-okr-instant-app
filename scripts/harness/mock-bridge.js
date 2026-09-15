@@ -154,8 +154,9 @@
     if (name === 'privos.lists.getAll') {
       return respond(event.source, data.id, LISTS);
     }
-    if (name === 'privos.lists.getItems') {
-      return respond(event.source, data.id, { items: ITEMS_BY_LIST[args.listId] || [], count: 0, offset: 0, total: 0 });
+    if (name === 'privos.lists.queryItems') {
+      const items = ITEMS_BY_LIST[args.listId] || [];
+      return respond(event.source, data.id, { items, count: items.length, nextCursor: null });
     }
     // Mutations are not exercised by the static screenshot pass; answer
     // benignly so a stray click during manual inspection does not hang.

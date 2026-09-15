@@ -67,10 +67,14 @@ clamped to `[0, 1]`.
 | `confidence` | SELECT | Same three-value enum as above |
 | `author` | TEXT | Display name recorded at check-in time |
 
-Recording a check-in creates a `OKR Check-ins` item **and** updates the linked key result's
-`currentValue`/`confidence` in the same action (`recordCheckIn` in `use-okr-data.ts`), so the
-key result's own row always reflects its latest check-in while `OKR Check-ins` keeps full
-history per key result.
+Recording a check-in is a single write: one `OKR Check-ins` item (`recordCheckIn` in
+`use-okr-data.ts`). The board takes each key result's current value and confidence from its
+latest check-in (`applyLatestCheckIns` in `list-mapping.ts`), so there is no second write that
+could leave the key result and its history out of step. A key result's own `currentValue` and
+`confidence` are only the values it was created with.
+
+Lists are read completely with `privos.lists.queryItems`, following its keyset cursor until it
+returns none, so large boards and long check-in histories are never cut off at one page.
 
 **Known race, by design:** two tabs opening a brand-new room at the same instant can each find
 the lists missing and each create one (`ensureList`'s "find-or-create" is not atomic — the Lists
@@ -84,6 +88,7 @@ server-side idempotent list-provisioning tool, if this is ever hit in practice.
 |---|---|---|
 | `basic:information` | required | Read the current room id so the board loads the right room's lists |
 | `lists:read` | required | Read the three OKR lists to render the board |
+| `lists:query` | required | Page through every item of the three lists with `privos.lists.queryItems` |
 | `lists:write` | optional (recommended) | Create the lists on first use, and create/update objectives, key results, and check-ins. Declines gracefully to a read-only board (`canWrite` in `use-okr-data.ts`) instead of failing every click. |
 
 No `users:read`, no `files:*`, no sandbox/db scopes — the app never needs them.
