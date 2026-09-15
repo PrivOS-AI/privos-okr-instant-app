@@ -145,7 +145,7 @@ export function ObjectiveDetail({
               onCancel={() => setAddingKeyResult(false)}
             />
           ) : (
-            <button type="button" onClick={() => setAddingKeyResult(true)}>
+            <button type="button" className="okr-secondary" onClick={() => setAddingKeyResult(true)}>
               Add key result
             </button>
           ))}

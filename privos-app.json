@@ -36,7 +36,7 @@
       "requirement": "required",
       "context": "room",
       "executionContext": "user",
-      "feature": "okr.records.read",
+      "feature": "okr.records.query",
       "reason": "Page through every item of the three OKR lists, so large boards and long check-in histories load completely."
     },
     {
