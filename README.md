@@ -103,33 +103,19 @@ No `users:read`, no `files:*`, no sandbox/db scopes — the app never needs them
 - Themed via the Hub's `--base-*` CSS custom properties (light/dark), with standalone-safe
   fallback values — see `src/ui/okr/okr.css`.
 
-## Local development against the unpublished SDK
+## Publishing to the PrivOS marketplace
 
-This template targets `@privos_ai/app-server` **`^0.12.0`** — the version this app is meant to
-ship against once published. At the time this app was built, the registry only has `0.11.1`;
-`0.12.x` exists only in the local, unpublished checkout at `~/projects/privos-app-packages`.
+The app depends only on published packages (`@privos_ai/app-server` `^0.12.0`,
+`@privos_ai/app-react` `^0.6.0`), so a plain `npm install` works.
 
-To develop against it locally:
-
-```bash
-scripts/build-vendor-packages.sh        # builds app-server (and app-react) from the local
-                                         # checkout into ./vendor/*.tgz — never modifies
-                                         # privos-app-packages itself
-```
-
-Then, **temporarily**, point the `@privos_ai/app-server` line in `package.json` at the tarball
-it just produced:
-
-```json
-"@privos_ai/app-server": "file:./vendor/privos_ai-app-server-0.11.1.tgz"
-```
-
-`npm install --include=dev` will then use the local build. `@privos_ai/app-react` needs no such
-override — `^0.6.0` is already published and resolves normally from the registry.
-
-**Before committing**, change that line back to `"^0.12.0"` — the range this README and the
-committed `package.json` both target. `vendor/` and `package-lock.json` are gitignored: they are
-a local, reproducible dev aid, not a pinned dependency of the published example.
+1. `npm run typecheck && npm test && npm run build && npm run manifest:lint:publish`
+2. Commit everything — `privos-app publish` packages the committed tree (`git archive`).
+3. `npm run publish:marketplace` — prints a device code and an approval URL on
+   client.privos.io; approve it while signed in as the listing owner.
+4. The Portal runs preflight → scan → AI review → `READY_FOR_REVIEW`; after a marketplace
+   admin approves, the build node runs `ui-build` (`privos-app bundle-ui`) and the version
+   becomes `PUBLISHED` with a signed ui-bundle. Installing it never starts a runtime: the Hub
+   loads the bundle into MinIO and serves the UI from there.
 
 ## Commands
 

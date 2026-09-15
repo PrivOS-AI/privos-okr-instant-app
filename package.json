@@ -24,7 +24,8 @@
     "manifest:lint": "privos-app lint privos-app.json",
     "manifest:lint:publish": "privos-app lint privos-app.json --publish",
     "bundle:ui": "privos-app bundle-ui --dist dist --out ui-bundle.tar",
-    "screenshot": "node scripts/render-screenshot.mjs"
+    "screenshot": "node scripts/render-screenshot.mjs",
+    "publish:marketplace": "privos-app publish"
   },
   "devDependencies": {
     "@privos_ai/app-react": "^0.6.0",
