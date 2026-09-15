@@ -2,7 +2,7 @@
   "schemaVersion": 3,
   "kind": "mcp-app",
   "name": "ai.privos.okr-instant-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "title": "OKR Goals Book",
   "description": "Track quarterly Objectives and Key Results per room: measurable key results, checkbox milestones, check-ins with confidence, and a progress board filterable by owner and status.",
   "icon": "/public/icon.svg",
