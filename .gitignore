@@ -8,7 +8,6 @@ coverage/
 .env.*
 !.env.example
 vendor/
-package-lock.json
 tmp/
 
 # privos-app publish packaging output
